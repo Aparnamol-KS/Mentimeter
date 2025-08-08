@@ -1,57 +1,35 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
+
 function Main() {
-    return <div
-        style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent:"center",
-            fontFamily: "cambria",
-            height:"100vh"
-        }}
-    >
-        <h3 style={{ fontSize: "70px", margin:'10px' }}>Mini Menti Meter</h3>
-        <p>Create, Share, and Explore Amazing quizes</p>
-        <div>
-            <button
-                style={{
-                    marginRight: "10px",
-                    backgroundColor: "black",
-                    color: "white",
-                    border: "none",
-                    padding: "10px 20px",
-                    borderRadius: "5px",
-                    fontSize: "16px",
-                    cursor: "pointer"
-                }}
-                onClick={() => window.location = "/admin/dashboard"}
-            >
-                Admin
-            </button>
+  const navigate = useNavigate();
 
-            <button
-                style={{
-                    backgroundColor: "white",
-                    color: "black",
-                    border: "1px solid black",
-                    padding: "10px 20px",
-                    borderRadius: "5px",
-                    fontSize: "16px",
-                    cursor: "pointer"
-                }}
-                onClick={() => window.location = "/user/dashboard"}
-            >
-                User
-            </button>
+  return (
+    <div className="h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-indigo-400 to-purple-500 text-white text-center relative overflow-hidden font-['Montserrat']">
+      <div className="z-10">
+        <h3 className="text-5xl md:text-6xl font-bold mb-4">Mini Menti Meter</h3>
+        <p className="text-lg md:text-xl text-gray-200 mb-10 ">
+          Create, Share, and Explore Amazing Quizzes
+        </p>
+
+        <div className="flex gap-4 justify-center">
+          <button
+            onClick={() => navigate("/admin/dashboard")}
+            className="bg-white text-gray-800 font-medium py-3 px-6 rounded-lg shadow-md transition-transform transform hover:scale-105"
+          >
+            Admin
+          </button>
+
+          <button
+            onClick={() => navigate("/user/dashboard")}
+            className="bg-transparent border-2 border-white text-white font-medium py-3 px-6 rounded-lg shadow-md transition-transform transform hover:scale-105"
+          >
+            User
+          </button>
         </div>
-
+      </div>
     </div>
+  );
 }
 
-
 export default Main;
-
-
-
-
-
-

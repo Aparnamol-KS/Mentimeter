@@ -13,6 +13,7 @@ import AttemptQuiz from './components/attempt_quiz';
 import LeaderBoard from './components/leaderboard';
 import AdminMain from './components/admin_access'
 import CreateQuiz from './components/createQuiz';
+import ProtectedRoute from "./components/ProtectedRoute";
 
 
 function App() {
@@ -25,7 +26,8 @@ function App() {
       <Route path="/admin/signup" element={<AdminSignUp />} />
       <Route path="/admin/signin" element={<AdminSignIn />} />
       <Route path="/user/dashboard" element={<UserDashboard />} />
-      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/admin/dashboard" element={<ProtectedRoute> <AdminDashboard /></ProtectedRoute>} />
+          
       <Route path="/view_all_quizes" element={<ViewAllQuizes />} />
       <Route path='/attempt/:quizId' element = {<AttemptQuiz/>} />
       <Route path='/leaderboard/:quizId' element = {<LeaderBoard/>} />
