@@ -250,7 +250,7 @@ app.post('/user/attempt_quiz/:quiz_id', authMiddleware, (req, res) => {
             message: "user not found!!"
         })
     } else {
-        QuizModel.find({
+        QuizModel.findOne({
             _id: quiz_id
         }).then(function (quiz) {
             if (quiz) {
