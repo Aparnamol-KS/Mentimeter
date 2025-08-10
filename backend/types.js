@@ -14,16 +14,20 @@ const SigninInput = zod.object({
 
 
 const QuizInput = zod.object({
-    title: zod.string(),
-    questions: [{
-        question: zod.string(),
-        option1:zod.string(),
-        option2:zod.string(),
-        option3:zod.string(),
-        option4:zod.string(),
-        answer: zod.string()
-    }]
-})
+  title: zod.string(),
+  questions: zod.array(
+    zod.object({
+      question: zod.string(),
+      option1: zod.string(),
+      option2: zod.string(),
+      option3: zod.string(),
+      option4: zod.string(),
+      answer: zod.string(),
+      _id: zod.string().optional(),
+    })
+  ),
+});
+
 
 module.exports = {
     SignUpInput,

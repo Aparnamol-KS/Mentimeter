@@ -1,0 +1,172 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
+function EditQuiz() {
+    const { quizId } = useParams();
+    const [title, setTitle] = useState("");
+    const [questions, setQuestions] = useState([
+        { question: "", option1: "", option2: "", option3: "", option4: "", answer: "" },
+    ]);
+
+    const addQn = () =>
+        setQuestions([
+            ...questions,
+            { question: "", option1: "", option2: "", option3: "", option4: "", answer: "" },
+        ]);
+
+    const updateQn = (index, field, value) => {
+        const updated = [...questions];
+        updated[index][field] = value;
+        setQuestions(updated);
+    };
+
+    useEffect(() => {
+        axios
+            .get(`http://localhost:3000/admin/quiz/${quizId}`, {
+                headers: {
+                    token: localStorage.getItem("token"),
+                },
+            })
+            .then((response) => {
+                console.log(response.data)
+                setTitle(response.data.title)
+                setQuestions(response.data.questions)
+
+            })
+            .catch(() => {
+                alert("Some error occurred!");
+            });
+    }, [quizId]);
+
+
+
+
+    function handleUpdate() {
+        const quizData = { title, questions };
+
+        axios
+            .post(
+                `http://localhost:3000/admin/updateQuiz/${quizId}`,
+                {
+                    title: quizData.title,
+                    questions: quizData.questions,
+                },
+                {
+                    headers: {
+                        token: localStorage.getItem("token"),
+                    },
+                }
+            )
+            .then(function (response) {
+                alert("Quiz Edited!");
+                window.location = "/admin/dashboard";
+            })
+            .catch((error) => {
+                alert(error.response?.data?.message || "Some error occurred!");
+            });
+    }
+
+    return (
+        <div className="min-h-screen bg-gray-900 text-white font-['Montserrat'] py-10 px-4">
+            <div className="max-w-5xl mx-auto">
+                <h1 className="text-3xl font-bold mb-8">Edit Quiz</h1>
+
+                {/* Title input */}
+                <div className="mb-8">
+                    <label className="block mb-2 font-semibold text-gray-300">Title</label>
+                    <input
+                        type="text"
+                        placeholder="Quiz Title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        required
+                    />
+                </div>
+
+                {/* Questions */}
+                <div className="space-y-6">
+                    {questions.map((q, index) => (
+                        <div
+                            key={index}
+                            className="bg-gray-800 rounded-xl p-6 shadow-lg"
+                        >
+                            <p className="text-xl font-semibold mb-4">Question {index + 1}</p>
+
+                            <input
+                                type="text"
+                                placeholder="Question"
+                                value={q.question}
+                                onChange={(e) => updateQn(index, "question", e.target.value)}
+                                className="w-full mb-4 px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                required
+                            />
+                            <input
+                                type="text"
+                                placeholder="Option 1"
+                                value={q.option1}
+                                onChange={(e) => updateQn(index, "option1", e.target.value)}
+                                className="w-full mb-3 px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                required
+                            />
+                            <input
+                                type="text"
+                                placeholder="Option 2"
+                                value={q.option2}
+                                onChange={(e) => updateQn(index, "option2", e.target.value)}
+                                className="w-full mb-3 px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                required
+                            />
+                            <input
+                                type="text"
+                                placeholder="Option 3"
+                                value={q.option3}
+                                onChange={(e) => updateQn(index, "option3", e.target.value)}
+                                className="w-full mb-3 px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                required
+                            />
+                            <input
+                                type="text"
+                                placeholder="Option 4"
+                                value={q.option4}
+                                onChange={(e) => updateQn(index, "option4", e.target.value)}
+                                className="w-full mb-3 px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                required
+                            />
+                            <input
+                                type="text"
+                                placeholder="Answer"
+                                value={q.answer}
+                                onChange={(e) => updateQn(index, "answer", e.target.value)}
+                                className="w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                required
+                            />
+                        </div>
+                    ))}
+                </div>
+
+                {/* Buttons */}
+                <div className="flex space-x-4 mt-8">
+                    <button
+                        onClick={addQn}
+                        type="button"
+                        className="bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-lg font-semibold shadow transition"
+                    >
+                        + Add Question
+                    </button>
+                    <button
+                        onClick={handleUpdate}
+                        type="button"
+                        className="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg font-semibold shadow transition"
+                    >
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+
+export default EditQuiz

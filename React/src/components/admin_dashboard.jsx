@@ -1,43 +1,37 @@
-
+import { Link, Outlet, useNavigate } from "react-router-dom";
 
 function AdminDashboard() {
-    return (
-        <div>
+  const navigate = useNavigate();
 
-            <h1 style={{ fontSize: "60px" }}>Admin Dashboard</h1>
+  const handleLogout = () => {
+    localStorage.removeItem("token"); 
+    navigate("/");
+  };
 
-            <button
-                style={{
-                    marginRight: "10px",
-                    backgroundColor: "black",
-                    color: "white",
-                    border: "none",
-                    padding: "10px 20px",
-                    borderRadius: "5px",
-                    fontSize: "16px",
-                    cursor: "pointer"
-                }}
-                onClick={() => window.location = "/admin/signup"}
-            >
-                Get Started
-            </button>
+   return (
+    <div className="flex h-screen bg-gray-900 font-['Montserrat'] text-white">
+      {/* Sidebar */}
+      <aside className="w-64 bg-black text-white flex flex-col p-8">
+        <h1 className="text-2xl font-bold mb-5">Admin Panel</h1>
+        <nav className="space-y-3">
+          <Link to="create_quiz" className="block py-2 hover:text-red-400">Create Quiz</Link>
+          <Link to="." className="block py-2 hover:text-red-400">View All Quizzes</Link>
+          <Link to="leaderboard" className="block py-2 hover:text-red-400">Leaderboard</Link>
+          <button
+            onClick={handleLogout}
+            className="block py-2 text-left hover:text-red-400 w-full"
+          >
+            Logout
+          </button>
+        </nav>
+      </aside>
 
-            <button
-                style={{
-                    backgroundColor: "white",
-                    color: "black",
-                    border: "1px solid black",
-                    padding: "10px 20px",
-                    borderRadius: "5px",
-                    fontSize: "16px",
-                    cursor: "pointer"
-                }}
-                onClick={() => window.location = "/admin/signin"}
-            >
-                Sign In
-            </button>
-        </div>
-    )
+      {/* Main content */}
+      <main className="flex-1 p-8 overflow-y-auto bg-gray-900">
+        <Outlet /> {/* Renders child routes */}
+      </main>
+    </div>
+  );
 }
 
-export default AdminDashboard
+export default AdminDashboard;

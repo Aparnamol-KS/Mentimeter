@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const { authMiddleware } = require('./middleware.js')
 const cors = require('cors')
 const { SignUpInput, SigninInput, QuizInput } = require('./types.js')
-require('dotenv').config(); 
+require('dotenv').config();
 
 const { UserModel, QuizModel, LeaderBoardModel } = require('./model.js');
 
@@ -41,7 +41,7 @@ app.post('/signup/admin', (req, res) => {
                 role: "admin"
             })
             res.send({
-                message: "user created!!",
+                message: "Admin created!!",
             })
         }
     })
@@ -93,7 +93,7 @@ app.post('/signin/admin', (req, res) => {
         username: username,
         password: password
     }).then(function (user) {
-        if (user) {
+        if (user && user.role == 'admin') {
             let token = jwt.sign({ username, password }, JWT_KEY)
             res.json({
                 token,
@@ -101,7 +101,7 @@ app.post('/signin/admin', (req, res) => {
             })
         } else {
             res.status(403).json({
-                message: "user not found!!"
+                message: "You are not an admin!!!"
             })
         }
     })
@@ -162,6 +162,34 @@ app.post("/admin/create-quiz", authMiddleware, (req, res) => {
             })
         }
 
+    }
+})
+
+app.get('/admin/quiz/:quizId', authMiddleware, (req, res) => {
+    quizId = req.params.quizId;
+    user = req.user;
+    if (!user) {
+        res.status(403).json({
+            message: "user not found!!"
+        })
+    } else {
+        if (user.role == "admin") {
+            QuizModel.findOne({
+                _id: quizId
+            }).then(function (quiz) {
+                if (quiz) {
+                    res.send(quiz)
+                } else {
+                    res.status(403).json({
+                        message: "Quiz is not available!!"
+                    })
+                }
+            })
+        } else {
+            res.status(403).json({
+                message: "You are not an admin "
+            })
+        }
     }
 })
 
@@ -250,7 +278,7 @@ app.post('/user/attempt_quiz/:quiz_id', authMiddleware, (req, res) => {
             message: "user not found!!"
         })
     } else {
-        QuizModel.find({
+        QuizModel.findOne({
             _id: quiz_id
         }).then(function (quiz) {
             if (quiz) {
