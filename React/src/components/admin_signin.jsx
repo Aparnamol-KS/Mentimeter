@@ -6,7 +6,7 @@ function AdminSignIn() {
 
   function signin() {
     axios
-      .post("http://localhost:3000/signin/user", {
+      .post("http://localhost:3000/signin/admin", {
         username: document.getElementById("username").value,
         password: document.getElementById("password").value,
       })

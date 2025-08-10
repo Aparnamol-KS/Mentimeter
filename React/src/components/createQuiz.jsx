@@ -37,7 +37,7 @@ function CreateQuiz() {
       )
       .then(function (response) {
         alert("Quiz submitted!");
-        window.location = "/admin/main";
+        window.location = "/admin/dashboard";
       })
       .catch((error) => {
         alert(error.response?.data?.message || "Some error occurred!");
