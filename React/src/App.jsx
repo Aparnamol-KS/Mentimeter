@@ -15,6 +15,7 @@ import ProtectedRouteUser from "./components/ProtectedRouteUser";
 import Profile from "./components/Profile";
 import ViewAllQuizes from "./components/view_all_quizes"
 import EditQuiz from "./components/editQuiz"
+import ViewAllLeaderBoard from "./components/view_all_leaderboards"
 
 function App() {
   return (
@@ -27,7 +28,7 @@ function App() {
         <Route path="/admin/signin" element={<AdminSignIn />} />
 
         <Route />
-        <Route path='/attempt/:quizId' element={<AttemptQuiz />} />
+        
         <Route path='/leaderboard/:quizId' element={<LeaderBoard />} />
         <Route />
 
@@ -41,7 +42,9 @@ function App() {
         >
           <Route path="profile" element={<Profile />} />
           <Route index element={<ViewAllQuizes />} />
-          <Route path="leaderboard" element={<LeaderBoard />} />
+          <Route path="leaderboard" element={<ViewAllLeaderBoard />} />
+          <Route path='attempt/:quizId' element={<AttemptQuiz />} />
+          
         </Route>
 
 
@@ -56,7 +59,7 @@ function App() {
         >
           <Route path="create_quiz" element={<CreateQuiz />} />
           <Route index element={<ViewAllQuizesAdmin />} />
-          <Route path="leaderboard" element={<LeaderBoard />} />
+          <Route path="leaderboard" element={<ViewAllLeaderBoard />} />
           <Route path="edit/:quizId" element = {<EditQuiz/>}/>
         </Route>
       </Routes>

@@ -19,28 +19,30 @@ function LeaderBoard() {
   }, [quizId]);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white font-['Montserrat'] py-10 px-4">
-      <div className="max-w-4xl mx-auto">
-        <h2 className="text-3xl font-bold mb-8 text-center">Leaderboard</h2>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white font-['Montserrat'] py-10 px-4">
+      <div className="max-w-3xl mx-auto">
+        <h2 className="text-6xl font-extrabold mb-10 text-center tracking-wide font-['Merriweather'] text-indigo-400 drop-shadow-lg">
+          Leaderboard
+        </h2>
 
         {leaderBoard.length > 0 ? (
-          <div className="space-y-4">
+          <div className="space-y-5">
             {leaderBoard.map((entry, index) => (
               <div
                 key={index}
-                className="flex justify-between items-center bg-gray-800 rounded-xl p-4 shadow hover:shadow-lg transition-shadow"
+                className="flex justify-between items-center bg-gray-800 rounded-2xl p-5 shadow-xs shadow-white select-none"
               >
                 <span className="text-lg font-semibold">
-                  {index + 1}. {entry.username}
+                  <span className="text-indigo-400 mr-3">{index + 1}.</span> {entry.username}
                 </span>
                 <span className="text-indigo-400 font-mono font-semibold text-lg">
-                  {entry.score}
+                  {entry.score} pts
                 </span>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-center text-gray-400">No entries found yet.</p>
+          <p className="text-center text-gray-400 italic mt-10">No entries found yet.</p>
         )}
       </div>
     </div>

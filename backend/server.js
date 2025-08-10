@@ -289,13 +289,14 @@ app.post('/user/attempt_quiz/:quiz_id', authMiddleware, (req, res) => {
                         answer: q.answer
                     })
                 });
+                console.log("backend",answersDB)
                 let count = 0
                 for (let i = 0; i < answersDB.length; i++) {
                     if (answersDB[i].answer == answers[i].selectedOption && answersDB[i].questionId == answers[i].questionId) {
                         count++;
                     }
                 }
-
+                console.log('count',count)
                 LeaderBoardModel.findOne({
                     quizId: quiz_id
                 }).then(function (quiz) {
@@ -336,22 +337,50 @@ app.post('/user/attempt_quiz/:quiz_id', authMiddleware, (req, res) => {
 
 })
 
-app.get('/leaderboard/:quiz_id', function (req, res) {
+app.get('/leaderboard/:quiz_id', authMiddleware,function (req, res) {
     const user = req.user;
     const quiz_id = req.params.quiz_id;
+    if (!user) {
+        res.status(403).json({
+            message: "user not found!!"
+        })
+    } else {
+        LeaderBoardModel.findOne({
+            quizId: quiz_id
+        }).then(function (obj) {
+            if (obj) {
+                let leaderboard = obj.attendees.sort((a, b) => b.score - a.score);
+                return res.send(leaderboard)
+            } else {
+                return res.json({
+                    message: "quiz not exist!!"
+                })
+            }
+        })
+    }
 
-    LeaderBoardModel.findOne({
-        quizId: quiz_id
-    }).then(function (obj) {
-        if (obj) {
-            let leaderboard = obj.attendees.sort((a, b) => b.score - a.score);
-            return res.send(leaderboard)
-        } else {
-            return res.json({
-                message: "quiz not exist!!"
-            })
-        }
-    })
+
+})
+
+app.get('/leaderboard', authMiddleware,function (req, res) {
+    const user = req.user;
+    if (!user) {
+        res.status(403).json({
+            message: "user not found!!"
+        })
+    } else {
+        LeaderBoardModel.find({
+        }).then(function (obj) {
+            if (obj) {
+                return res.send(obj)
+            } else {
+                return res.json({
+                    message: "LeaderBoard doesn't exist"
+                })
+            }
+        })
+    }
+
 })
 
 app.listen(3000);
