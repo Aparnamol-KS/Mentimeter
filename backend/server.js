@@ -1,6 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const { authMiddleware } = require('./middleware.js')
+const { authMiddleware,verifyAdmin } = require('./middleware.js')
 const cors = require('cors')
 const { SignUpInput, SigninInput, QuizInput } = require('./types.js')
 require('dotenv').config();
@@ -13,6 +13,12 @@ const app = express()
 app.use(cors())
 
 app.use(express.json())
+
+app.get('/admin/data',verifyAdmin,(req,res)=>{
+    return res.json({
+        "user":req.user
+    })
+})
 
 app.post('/signup/admin', (req, res) => {
 
