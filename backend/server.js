@@ -142,6 +142,18 @@ app.post('/signin/user', (req, res) => {
 
 })
 
+app.get('/getUser',authMiddleware,(req,res)=>{
+    const user = req.user;
+    if(!user){
+        return res.status(403).json({
+            message:"user not found!"
+        })
+    }
+
+    return res.json({
+        "user":user
+    })
+})
 
 app.post("/admin/create-quiz", authMiddleware, (req, res) => {
     const user = req.user;

@@ -5,7 +5,8 @@ import { useNavigate, useParams } from "react-router-dom";
 function AttemptQuiz() {
   const { quizId } = useParams();
   const [quiz, setQuiz] = useState({});
-  const [answers, setAnswers] = useState({});  // { questionId: selectedOptionText }
+  const [answers, setAnswers] = useState({});
+  const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,12 +21,11 @@ function AttemptQuiz() {
   }, [quizId]);
 
   function handleChange(qId, optIndex) {
-    // Get the option text from quiz.questions by qId and optIndex
     const question = quiz.questions.find((q) => q._id === qId);
     if (!question) return;
 
     const options = [question.option1, question.option2, question.option3, question.option4];
-    const selectedOptionText = options[optIndex - 1]; // idx + 1 in your original code
+    const selectedOptionText = options[optIndex - 1];
 
     setAnswers((prev) => ({
       ...prev,
@@ -35,13 +35,11 @@ function AttemptQuiz() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    // Transform answers object into array of { questionId, answer }
     const inp_answers = Object.entries(answers).map(([questionId, selectedOption]) => ({
       questionId,
       selectedOption,
     }));
 
-    console.log("Formatted answers to send:", inp_answers);
 
     axios
       .post(
@@ -49,12 +47,15 @@ function AttemptQuiz() {
         { answers: inp_answers },
         { headers: { token: localStorage.getItem("token") } }
       )
-      .then((response) => {
-        alert(response.data.message);
-        navigate(`/leaderboard/${quizId}`);
+      .then(() => {
+        setShowPopup(true);
       })
       .catch(() => alert("Some error occurred!"));
   }
+  const handleOkClick = () => {
+    setShowPopup(false);
+    navigate(`/leaderboard/${quizId}`);
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white font-['Montserrat'] py-10 px-4">
@@ -97,6 +98,23 @@ function AttemptQuiz() {
             </button>
           </div>
         </form>
+        {showPopup && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-gray-800 rounded-lg shadow-lg p-6 w-80 text-center border border-gray-700">
+              <h2 className="text-xl font-semibold mb-4">Quiz Submitted!</h2>
+              <p className="text-gray-300 mb-6">
+                Your submission has been evaluated.
+              </p>
+              <button
+                onClick={handleOkClick}
+                className="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg font-semibold shadow"
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );

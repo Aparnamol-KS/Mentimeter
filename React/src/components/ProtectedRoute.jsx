@@ -17,7 +17,7 @@ function ProtectedRoute({ children }) {
     }).then(function (user) {
       setAdmin(true)
     }).catch(err => {
-      setAdmin(false)
+      setAdmin(false) 
     });
   }, [token]);
 
