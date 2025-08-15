@@ -6,6 +6,8 @@ function CreateQuiz() {
   const [questions, setQuestions] = useState([
     { question: "", option1: "", option2: "", option3: "", option4: "", answer: "" },
   ]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMsg, setpopupMsg] = useState('')
 
   const addQn = () =>
     setQuestions([
@@ -36,13 +38,27 @@ function CreateQuiz() {
         }
       )
       .then(function (response) {
-        alert("Quiz submitted!");
-        window.location = "/admin/dashboard";
+        setShowPopup(true);
+        setpopupMsg("Quiz added successfully!!")
       })
-      .catch((error) => {
-        alert(error.response?.data?.message || "Some error occurred!");
+      .catch((err) => {
+        if (err.response?.status === 401) {
+          setpopupMsg('User not found!!')
+        } else if (err.response?.status === 403) {
+          setpopupMsg("You are not authorized to add quizzes.")
+        } else if (err.response?.status == 201) {
+          setpopupMsg("Quiz added successfully!!")
+        } else if (err.response?.status == 500) {
+          setpopupMsg("Internal Server Error")
+        }
       });
   }
+
+  const handleOkClick = () => {
+    setShowPopup(false);
+    setpopupMsg("")
+    navigate("/admin/dashboard");
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white font-['Montserrat'] py-10 px-4">
@@ -140,6 +156,20 @@ function CreateQuiz() {
             Submit
           </button>
         </div>
+        {showPopup && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-gray-800 rounded-lg shadow-lg p-6 w-80 text-center border border-gray-700">
+              <h2 className="text-xl font-semibold mb-4">{popupMsg}</h2>
+              <button
+                onClick={handleOkClick}
+                className="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg font-semibold shadow"
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );

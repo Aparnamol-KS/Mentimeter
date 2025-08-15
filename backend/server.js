@@ -1,6 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const { authMiddleware,verifyAdmin } = require('./middleware.js')
+const { authMiddleware, verifyAdmin } = require('./middleware.js')
 const cors = require('cors')
 const { SignUpInput, SigninInput, QuizInput } = require('./types.js')
 require('dotenv').config();
@@ -14,9 +14,9 @@ app.use(cors())
 
 app.use(express.json())
 
-app.get('/admin/data',verifyAdmin,(req,res)=>{
+app.get('/admin/data', verifyAdmin, (req, res) => {
     return res.json({
-        "user":req.user
+        "user": req.user
     })
 })
 
@@ -142,42 +142,85 @@ app.post('/signin/user', (req, res) => {
 
 })
 
-app.get('/getUser',authMiddleware,(req,res)=>{
+app.get('/getUser', authMiddleware, (req, res) => {
     const user = req.user;
-    if(!user){
+    if (!user) {
         return res.status(403).json({
-            message:"user not found!"
+            message: "user not found!"
         })
     }
 
     return res.json({
-        "user":user
+        "user": user
     })
 })
 
 app.post("/admin/create-quiz", authMiddleware, (req, res) => {
     const user = req.user;
     const { title, questions } = req.body;
+
     if (!user) {
-        res.status(403).json({
+        return res.status(401).json({  //401->Unauthorized
+            message: "User not found!!"
+        });
+    }
+
+    if (user.role !== "admin") {
+        return res.status(403).json({ // 403 ->Forbidden 
+            message: "You are not an admin"
+        });
+    }
+
+    QuizModel.create({
+        userId: user._id,
+        title,
+        questions
+    }).then((response) => {
+        res.status(201).json({ //201->successfull
+            message: "Quiz added successfully!!",
+            response
+        });
+    }).catch(err => {
+        res.status(500).json({ //500->Internal Server Error
+            message: "Error creating quiz",
+            error: err.message
+        });
+    });
+
+})
+
+app.delete("/admin/deleteQuiz/:quizId", authMiddleware, (req, res) => {
+    quizId = req.params.quizId
+    user = req.user
+    if (!user) {
+        res.status(401).json({
             message: "user not found!!"
         })
     } else {
-        if (user.role == "admin") {
-            QuizModel.create({
-                userId: user._id,
-                title: title,
-                questions: questions
-            }).then(function (response) {
-                res.json({
-                    message: "quiz added successfully!!",
-                    response
+        if (user.role === "admin") {
+            QuizModel.findOneAndDelete({ _id: quizId })
+                .then((deletedQuiz) => {
+                    if (deletedQuiz) {
+                        res.status(200).json({
+                            message: "Quiz deleted successfully!",
+                            deletedQuiz
+                        });
+                    } else {
+                        res.status(404).json({
+                            message: "Quiz not found!"
+                        });
+                    }
                 })
-            })
+                .catch((err) => {
+                    res.status(500).json({
+                        message: "Error deleting quiz",
+                        error: err.message
+                    });
+                });
         } else {
             res.status(403).json({
-                message: "You are not an admin "
-            })
+                message: "You are not an admin"
+            });
         }
 
     }
@@ -307,14 +350,12 @@ app.post('/user/attempt_quiz/:quiz_id', authMiddleware, (req, res) => {
                         answer: q.answer
                     })
                 });
-                console.log("backend",answersDB)
                 let count = 0
                 for (let i = 0; i < answersDB.length; i++) {
                     if (answersDB[i].answer == answers[i].selectedOption && answersDB[i].questionId == answers[i].questionId) {
                         count++;
                     }
                 }
-                console.log('count',count)
                 LeaderBoardModel.findOne({
                     quizId: quiz_id
                 }).then(function (quiz) {
@@ -355,7 +396,7 @@ app.post('/user/attempt_quiz/:quiz_id', authMiddleware, (req, res) => {
 
 })
 
-app.get('/leaderboard/:quiz_id', authMiddleware,function (req, res) {
+app.get('/leaderboard/:quiz_id', authMiddleware, function (req, res) {
     const user = req.user;
     const quiz_id = req.params.quiz_id;
     if (!user) {
@@ -380,7 +421,7 @@ app.get('/leaderboard/:quiz_id', authMiddleware,function (req, res) {
 
 })
 
-app.get('/leaderboard', authMiddleware,function (req, res) {
+app.get('/leaderboard', authMiddleware, function (req, res) {
     const user = req.user;
     if (!user) {
         res.status(403).json({
