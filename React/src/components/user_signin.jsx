@@ -1,38 +1,63 @@
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function UserSignIn() {
+    const navigate = useNavigate();
 
     function signin() {
-
-        axios.post('http://localhost:3000/signin/user', {
-            username: document.getElementById('username').value,
-            password: document.getElementById('password').value
-        }).then(function (response) {
-            let token = response.data.token;
-            localStorage.setItem('token',token);
-            window.location = '/view_all_quizes'
-        }).catch(error => {
-            alert("some error occured!!")
-        })
+        axios
+            .post("http://localhost:3000/signin/user", {
+                username: document.getElementById("username").value,
+                password: document.getElementById("password").value,
+            })
+            .then(function (response) {
+                let token = response.data.token;
+                localStorage.setItem("token", token);
+                navigate("/user/dashboard");
+            })
+            .catch(() => {
+                alert("Some error occurred!!");
+            });
     }
 
+    return (
+        <div className="h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-indigo-400 to-purple-500 text-white font-['Montserrat']">
+            <div className="bg-white text-gray-800 rounded-lg shadow-lg p-10 w-full max-w-md">
+                <h1 className="text-4xl font-bold mb-6 text-center">User Sign In</h1>
 
-    return <div style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "20px",
-        fontFamily: "cambria"
+                <input
+                    type="text"
+                    id="username"
+                    placeholder="Username"
+                    className="w-full mb-4 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                />
 
-    }}>
-        <h1 style={{ fontSize: "60px" }}>User Sign In</h1>
-        <input style={{ margin: "8px", width: "15%", padding: "7px" }} type="text" placeholder="Username" id="username" />
-        <input style={{ margin: "8px", width: "15%", padding: "7px" }} type="password" placeholder="Password" id="password" />
-        <button style={{ backgroundColor: "black", color: "white", borderRadius: "5px", padding: "5px", width: "80px", margin: "20px" }} onClick={signin}>Sign In</button>
-        <p>Already have an account ? <a style={{ textDecoration: "none", fontWeight: "bold" }} href="/user/signup">Sign Up</a></p>
-    </div>
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Password"
+                    className="w-full mb-6 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                />
+
+                <button
+                    onClick={signin}
+                    className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-3 rounded-lg shadow-md transition-transform transform hover:scale-105"
+                >
+                    Sign In
+                </button>
+
+                <p className="mt-6 text-center text-gray-600">
+                    Don’t have an account?{" "}
+                    <a
+                        href="/user/signup"
+                        className="text-indigo-500 font-semibold hover:underline"
+                    >
+                        Sign Up
+                    </a>
+                </p>
+            </div>
+        </div>
+    );
 }
 
-
-export default UserSignIn
+export default UserSignIn;

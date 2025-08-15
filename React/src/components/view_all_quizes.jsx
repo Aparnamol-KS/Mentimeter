@@ -19,7 +19,7 @@ function ViewAllQuizes() {
   }, []);
 
   function attempt(quiz_id) {
-    navigate(`/attempt/${quiz_id}`);
+    navigate(`attempt/${quiz_id}`);
   }
 return (
   <div className="min-h-screen bg-gray-900 text-white font-['Montserrat'] py-10 px-4">
