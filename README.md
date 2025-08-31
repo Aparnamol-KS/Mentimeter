@@ -1,4 +1,12 @@
 # Mentimeter Clone — Quiz Management Application
+![React](https://img.shields.io/badge/React-17.0-blue?logo=react&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-18-green?logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express.js-4.18-lightgrey)
+![MongoDB](https://img.shields.io/badge/MongoDB-6.0-green?logo=mongodb&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.3-blue?logo=tailwind-css&logoColor=white)
+![Zod](https://img.shields.io/badge/Zod-3.21-purple)
+![License](https://img.shields.io/badge/License-MIT-green)
+
 A full-stack quiz application inspired by Mentimeter, enabling admins to create and edit quizzes, and users to attempt quizzes and view leaderboards.
 Built with React, Node.js, Express, MongoDB, and Zod validation.
 
