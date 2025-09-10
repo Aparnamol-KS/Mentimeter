@@ -26,9 +26,8 @@ function AdminDashboard() {
         </nav>
       </aside>
 
-      {/* Main content */}
       <main className="flex-1 p-8 overflow-y-auto bg-gray-900">
-        <Outlet /> {/* Renders child routes */}
+        <Outlet /> 
       </main>
     </div>
   );
