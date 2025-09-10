@@ -72,7 +72,6 @@ function EditQuiz() {
             <div className="max-w-5xl mx-auto">
                 <h1 className="text-3xl font-bold mb-8">Edit Quiz</h1>
 
-                {/* Title input */}
                 <div className="mb-8">
                     <label className="block mb-2 font-semibold text-gray-300">Title</label>
                     <input
@@ -85,7 +84,6 @@ function EditQuiz() {
                     />
                 </div>
 
-                {/* Questions */}
                 <div className="space-y-6">
                     {questions.map((q, index) => (
                         <div
@@ -146,7 +144,6 @@ function EditQuiz() {
                     ))}
                 </div>
 
-                {/* Buttons */}
                 <div className="flex space-x-4 mt-8">
                     <button
                         onClick={addQn}
